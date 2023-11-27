@@ -6,11 +6,15 @@ const authRoutes = require('./routes/authRoutes');
 const cors = require('cors');
 const productRoutes = require('./routes/productRoutes');
 const fileUpload = require('express-fileupload');
+const path = require('path');
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
-mongoose.connect('mongodb+srv://dotelkritan8:sirhoraa888@cluster0.tybi7uf.mongodb.net/').then((val) => {
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+mongoose.connect('mongodb+srv://dotelkritan8:sirhoraa888@cluster0.tybi7uf.mongodb.net/Shop').then((val) => {
   app.listen(port, () => {
     console.log('connected');
   });
@@ -31,5 +35,6 @@ app.use(productRoutes);
 app.use((req, res) => {
   return res.status(404).json("not found");
 })
+
 
 

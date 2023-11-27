@@ -38,8 +38,8 @@ const productSchema = mongoose.Schema({
     default: 0
   },
   numReviews: {
-    type: String,
-    required: true
+    type: Number,
+    default: 0
   },
 
   product_image: {
@@ -64,5 +64,4 @@ const productSchema = mongoose.Schema({
 }, { timestamps: true });
 
 
-const Product = mongoose.model('Product', productSchema);
-module.exports = Product;
+module.exports = mongoose.model('Product', productSchema);

@@ -4,14 +4,14 @@ const jwt = require('jsonwebtoken');
 
 module.exports.userLogin = async (req, res) => {
   const { email, password } = req.body;
+
   try {
     const isExist = await User.findOne({ email: email });
 
     if (isExist) {
       const isPass = bcrypt.compareSync(password, isExist.password);
       const token = jwt.sign({
-        id: isExist._id,
-        isAdmin: isExist.isAdmin
+        id: isExist._id
       }, 'jsonToken');
       if (isPass) return res.status(200).json({
         email,
