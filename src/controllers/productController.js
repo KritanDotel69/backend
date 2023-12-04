@@ -1,5 +1,7 @@
 const Product = require('../models/Product');
 const mongoose = require('mongoose');
+const fs = require('fs');
+
 
 module.exports.getAllProducts = async (req, res) => {
   try {
@@ -97,3 +99,32 @@ module.exports.updateProduct = async (req, res) => {
   }
 
 }
+
+
+module.exports.removeProduct = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    if (mongoose.isValidObjectId(id)) {
+      const isExist = await Product.findById(id);
+      if (isExist) {
+        fs.unlink(`.${isExist.product_image}`, (err) => {
+          console.log(err);
+        });
+
+        await isExist.deleteOne();
+        return res.status(201).json('product remove successfully');
+      } else {
+        return res.status(400).json('product not found');
+      }
+
+    } else {
+      return res.status(400).json('please provide valid id');
+    }
+
+  } catch (err) {
+    return res.status(400).json(`${err}`);
+  }
+
+}
+

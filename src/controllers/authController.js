@@ -53,6 +53,39 @@ module.exports.userRegister = async (req, res) => {
   } catch (err) {
     return res.status(400).json({ message: `${err}` });
   }
+}
+
+
+module.exports.userUpdate = async (req, res) => {
+  const { email, fullname, shippingAddress } = req.body;
+  try {
+    const isExist = await User.findById(req.user._id);
+
+    if (isExist) {
+      isExist.email = email || isExist.email,
+        isExist.fullname = fullname || isExist.fullname;
+      isExist.shippingAddress = shippingAddress || isExist.shippingAddress;
+
+      isExist.save();
+      const token = jwt.sign({
+        id: isExist._id
+      }, 'jsonToken');
+      return res.status(200).json({
+        email: isExist.email,
+        token,
+        fullname: isExist.fullname,
+        isAdmin: isExist.isAdmin,
+        shippingAddress: isExist.shippingAddress
+      });
+
+    } else {
+
+      return res.status(404).json('user doesnot exist');
+    }
+
+  } catch (err) {
+    return res.status(400).json({ message: `${err}` });
+  }
 
 
 }
